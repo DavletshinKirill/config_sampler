@@ -1,7 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from config import config
-import os
 db = SQLAlchemy()
 
 
@@ -12,11 +11,14 @@ class Users(db.Model):
     password = db.Column(db.Text)
 
 
-if __name__ == '__main__':
-
+def create_app(config_name="development"):
     app = Flask(__name__)
-    app.config.from_object(config['development'])
-    print(os.environ.get('SQLALCHEMY_DATABASE_URI'))
-    config['development'].init_app(app)
+    app.config.from_object(config[config_name])
+    config[config_name].init_app(app)
     db.init_app(app)
+    return app
+
+
+if __name__ == '__main__':
+    app = create_app()
     app.run()
